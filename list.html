@@ -13,6 +13,8 @@
   th { background: #f4f2ee; }
   td.num { text-align: right; font-variant-numeric: tabular-nums; }
   a { color: #0d6d64; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover { background: #f9f7f3; }
 </style>
 </head>
 <body>
@@ -33,7 +35,7 @@ async function load() {
   const rows = await res.json();
   document.getElementById('count').textContent = '총 ' + rows.length + '건';
   document.getElementById('rows').innerHTML = rows.map(r =>
-    `<tr>
+    `<tr data-id="${r.id}" onclick="location.href='detail.html?id=${r.id}'">
        <td>${r.id}</td>
        <td>${r.buyer_name}</td>
        <td>${r.product}</td>
