@@ -3,49 +3,176 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>주문 상세</title>
+<title>판매 영수증</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: "Apple SD Gothic Neo", sans-serif; background: #f9f9f9; color: #1b1d21; }
+  body {
+    font-family: "Courier New", monospace;
+    background: #f5f5f5;
+    color: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
 
-  header { background: #C72C48; height: 60px; }
+  .receipt {
+    background: white;
+    width: 100%;
+    max-width: 380px;
+    padding: 30px 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    border-radius: 4px;
+  }
 
-  .container { max-width: 600px; margin: 0 auto; padding: 60px 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+  .receipt-header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px dashed #ccc;
+  }
 
-  .logo { text-align: center; margin-bottom: 40px; font-size: 28px; font-weight: 700; color: #C72C48; }
+  .store-name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
 
-  .title { text-align: center; font-size: 32px; font-weight: 700; margin-bottom: 16px; }
+  .store-info {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.6;
+  }
 
-  .subtitle { text-align: center; color: #666; font-size: 16px; margin-bottom: 40px; }
+  .divider {
+    border-bottom: 2px dashed #ccc;
+    margin: 12px 0;
+  }
 
-  .info-box { background: white; border-radius: 8px; padding: 32px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .receipt-body {
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
 
-  .info-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #eee; }
-  .info-row:last-child { border-bottom: none; }
+  .receipt-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    align-items: center;
+  }
 
-  .info-label { color: #666; font-size: 14px; }
-  .info-value { font-size: 16px; font-weight: 600; text-align: right; }
+  .receipt-label {
+    font-weight: normal;
+    color: #555;
+  }
 
-  .info-highlight { color: #C72C48; font-size: 28px; font-weight: 700; padding: 24px 0; text-align: center; border-top: 2px solid #eee; border-bottom: 2px solid #eee; margin: 16px 0; }
+  .receipt-value {
+    text-align: right;
+    font-weight: 500;
+  }
 
-  .button { width: 100%; padding: 16px; background: #C72C48; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.3s ease; }
-  .button:hover { background: #a31c35; }
+  .product-name {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 12px 0 8px 0;
+    text-align: center;
+  }
 
-  .footer-links { text-align: center; margin-top: 32px; font-size: 14px; }
-  .footer-links a { color: #C72C48; text-decoration: none; margin: 0 12px; }
+  .quantity-price {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+  }
 
-  .error { text-align: center; color: #d32f2f; padding: 40px 20px; font-size: 16px; }
+  .receipt-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 12px 0;
+    border-top: 2px dashed #ccc;
+    border-bottom: 2px dashed #ccc;
+    margin: 12px 0;
+    color: #C72C48;
+  }
 
-  .close-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: #666; }
+  .total-label {
+    font-size: 14px;
+  }
+
+  .total-amount {
+    font-size: 24px;
+  }
+
+  .receipt-footer {
+    text-align: center;
+    font-size: 11px;
+    color: #888;
+    line-height: 1.8;
+    padding: 16px 0;
+    border-bottom: 2px dashed #ccc;
+  }
+
+  .footer-message {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    margin: 16px 0;
+    font-style: italic;
+  }
+
+  .button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: "Apple SD Gothic Neo", sans-serif;
+  }
+
+  .btn-primary {
+    background: #C72C48;
+    color: white;
+    border-color: #C72C48;
+  }
+
+  .btn-primary:hover {
+    background: #a31c35;
+  }
+
+  .btn-secondary:hover {
+    background: #f5f5f5;
+  }
+
+  .error {
+    text-align: center;
+    color: #d32f2f;
+    padding: 40px 20px;
+  }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .receipt { box-shadow: none; }
+    .button-group { display: none; }
+  }
 </style>
 </head>
 <body>
-  <header></header>
-
-  <div class="container">
-    <div class="logo">☕</div>
-    <h1 class="title">주문 상세</h1>
-    <p class="subtitle">판매 주문의 상세 정보입니다</p>
+  <div class="receipt">
     <div id="content"></div>
   </div>
 
@@ -66,43 +193,61 @@ async function load() {
   }
 
   const data = await res.json();
-  const purchasedAt = new Date(data.purchased_at).toLocaleString('ko-KR');
+  const purchasedAt = new Date(data.purchased_at);
+  const date = purchasedAt.toLocaleDateString('ko-KR');
+  const time = purchasedAt.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
 
   document.getElementById('content').innerHTML = `
-    <div class="info-box">
-      <div class="info-row">
-        <span class="info-label">주문 번호</span>
-        <span class="info-value">#${data.id}</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">구매자</span>
-        <span class="info-value">${data.buyer_name}</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">상품명</span>
-        <span class="info-value">${data.product}</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">수량</span>
-        <span class="info-value">${data.quantity}개</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">단가</span>
-        <span class="info-value">${data.price_per_unit.toLocaleString('ko-KR')}원</span>
-      </div>
-      <div class="info-highlight">
-        합계: ${data.total_price.toLocaleString('ko-KR')}원
-      </div>
-      <div class="info-row">
-        <span class="info-label">구매 시각</span>
-        <span class="info-value" style="font-size: 14px;">${purchasedAt}</span>
+    <div class="receipt-header">
+      <div class="store-name">☕ 커피 자판기</div>
+      <div class="store-info">
+        판매 기록 영수증<br>
+        Order Receipt
       </div>
     </div>
 
-    <button class="button" onclick="location.href='list.html'">목록으로 돌아가기</button>
+    <div class="divider"></div>
 
-    <div class="footer-links">
-      <a href="index.html">새 주문 등록</a> | <a href="list.html">판매 현황</a>
+    <div class="receipt-body">
+      <div class="receipt-row">
+        <span class="receipt-label">주문번호</span>
+        <span class="receipt-value">#${data.id}</span>
+      </div>
+
+      <div class="receipt-row">
+        <span class="receipt-label">구매자</span>
+        <span class="receipt-value">${data.buyer_name}</span>
+      </div>
+
+      <div class="product-name">${data.product}</div>
+
+      <div class="quantity-price">
+        <span>${data.quantity}개 × ${data.price_per_unit.toLocaleString('ko-KR')}원</span>
+      </div>
+
+      <div class="receipt-total">
+        <span class="total-label">합계</span>
+        <span class="total-amount">${data.total_price.toLocaleString('ko-KR')}원</span>
+      </div>
+
+      <div class="receipt-row">
+        <span class="receipt-label">구매일시</span>
+        <span class="receipt-value">${date} ${time}</span>
+      </div>
+    </div>
+
+    <div class="receipt-footer">
+      감사합니다<br>
+      Thank you!
+    </div>
+
+    <div class="footer-message">
+      "언제나 맛있는 커피를 드리겠습니다"
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-secondary" onclick="location.href='list.html'">목록</button>
+      <button class="btn btn-primary" onclick="location.href='index.html'">새 주문</button>
     </div>
   `;
 }
