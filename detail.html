@@ -5,21 +5,49 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>주문 상세</title>
 <style>
-  body { font-family: "Apple SD Gothic Neo", sans-serif; max-width: 760px; margin: 40px auto; padding: 0 16px; color: #1b1d21; }
-  h1 { font-size: 24px; }
-  .back { margin-bottom: 16px; }
-  .back a { color: #0d6d64; }
-  .detail { margin-top: 24px; }
-  .detail-row { display: flex; border-bottom: 1px solid #ddd; padding: 12px 0; }
-  .detail-label { width: 100px; font-weight: 600; color: #666; }
-  .detail-value { flex: 1; }
-  .error { color: #d32f2f; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Apple SD Gothic Neo", sans-serif; background: #f9f9f9; color: #1b1d21; }
+
+  header { background: #C72C48; height: 60px; }
+
+  .container { max-width: 600px; margin: 0 auto; padding: 60px 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+
+  .logo { text-align: center; margin-bottom: 40px; font-size: 28px; font-weight: 700; color: #C72C48; }
+
+  .title { text-align: center; font-size: 32px; font-weight: 700; margin-bottom: 16px; }
+
+  .subtitle { text-align: center; color: #666; font-size: 16px; margin-bottom: 40px; }
+
+  .info-box { background: white; border-radius: 8px; padding: 32px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+  .info-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #eee; }
+  .info-row:last-child { border-bottom: none; }
+
+  .info-label { color: #666; font-size: 14px; }
+  .info-value { font-size: 16px; font-weight: 600; text-align: right; }
+
+  .info-highlight { color: #C72C48; font-size: 28px; font-weight: 700; padding: 24px 0; text-align: center; border-top: 2px solid #eee; border-bottom: 2px solid #eee; margin: 16px 0; }
+
+  .button { width: 100%; padding: 16px; background: #C72C48; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.3s ease; }
+  .button:hover { background: #a31c35; }
+
+  .footer-links { text-align: center; margin-top: 32px; font-size: 14px; }
+  .footer-links a { color: #C72C48; text-decoration: none; margin: 0 12px; }
+
+  .error { text-align: center; color: #d32f2f; padding: 40px 20px; font-size: 16px; }
+
+  .close-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: #666; }
 </style>
 </head>
 <body>
-  <div class="back"><a href="list.html">← 목록으로 돌아가기</a></div>
-  <h1>주문 상세</h1>
-  <div id="content"></div>
+  <header></header>
+
+  <div class="container">
+    <div class="logo">☕</div>
+    <h1 class="title">주문 상세</h1>
+    <p class="subtitle">판매 주문의 상세 정보입니다</p>
+    <div id="content"></div>
+  </div>
 
 <script>
 async function load() {
@@ -27,13 +55,13 @@ async function load() {
   const id = params.get('id');
 
   if (!id) {
-    document.getElementById('content').innerHTML = '<p class="error">주문 ID가 없습니다.</p>';
+    document.getElementById('content').innerHTML = '<div class="error">주문 ID가 없습니다.</div>';
     return;
   }
 
   const res = await fetch(`/api/list?id=${id}`);
   if (!res.ok) {
-    document.getElementById('content').innerHTML = '<p class="error">주문을 불러올 수 없습니다.</p>';
+    document.getElementById('content').innerHTML = '<div class="error">주문을 불러올 수 없습니다.</div>';
     return;
   }
 
@@ -41,35 +69,40 @@ async function load() {
   const purchasedAt = new Date(data.purchased_at).toLocaleString('ko-KR');
 
   document.getElementById('content').innerHTML = `
-    <div class="detail">
-      <div class="detail-row">
-        <div class="detail-label">주문 ID</div>
-        <div class="detail-value">${data.id}</div>
+    <div class="info-box">
+      <div class="info-row">
+        <span class="info-label">주문 번호</span>
+        <span class="info-value">#${data.id}</span>
       </div>
-      <div class="detail-row">
-        <div class="detail-label">구매자</div>
-        <div class="detail-value">${data.buyer_name}</div>
+      <div class="info-row">
+        <span class="info-label">구매자</span>
+        <span class="info-value">${data.buyer_name}</span>
       </div>
-      <div class="detail-row">
-        <div class="detail-label">상품</div>
-        <div class="detail-value">${data.product}</div>
+      <div class="info-row">
+        <span class="info-label">상품명</span>
+        <span class="info-value">${data.product}</span>
       </div>
-      <div class="detail-row">
-        <div class="detail-label">수량</div>
-        <div class="detail-value">${data.quantity}개</div>
+      <div class="info-row">
+        <span class="info-label">수량</span>
+        <span class="info-value">${data.quantity}개</span>
       </div>
-      <div class="detail-row">
-        <div class="detail-label">단가</div>
-        <div class="detail-value">${data.price_per_unit.toLocaleString('ko-KR')}원</div>
+      <div class="info-row">
+        <span class="info-label">단가</span>
+        <span class="info-value">${data.price_per_unit.toLocaleString('ko-KR')}원</span>
       </div>
-      <div class="detail-row">
-        <div class="detail-label">합계</div>
-        <div class="detail-value" style="font-weight: 600; color: #0d6d64;">${data.total_price.toLocaleString('ko-KR')}원</div>
+      <div class="info-highlight">
+        합계: ${data.total_price.toLocaleString('ko-KR')}원
       </div>
-      <div class="detail-row">
-        <div class="detail-label">구매 시각</div>
-        <div class="detail-value">${purchasedAt}</div>
+      <div class="info-row">
+        <span class="info-label">구매 시각</span>
+        <span class="info-value" style="font-size: 14px;">${purchasedAt}</span>
       </div>
+    </div>
+
+    <button class="button" onclick="location.href='list.html'">목록으로 돌아가기</button>
+
+    <div class="footer-links">
+      <a href="index.html">새 주문 등록</a> | <a href="list.html">판매 현황</a>
     </div>
   `;
 }
